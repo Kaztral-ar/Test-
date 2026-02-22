@@ -66,7 +66,7 @@ body.loaded .page-content {
 }
 
 .loader-terminal .terminal-body {
-  min-height: 170px;
+  min-height: 220px;
 }
 
 .loader-cursor-line {
@@ -294,6 +294,37 @@ body.loaded .page-content {
 
 .line { margin: 0.45rem 0; }
 .label { color: var(--accent); }
+
+.loader-prompt-line {
+  letter-spacing: 0.02em;
+}
+
+.prompt-user {
+  color: #f18a66;
+  text-shadow: 0 0 10px rgba(241, 138, 102, 0.2);
+}
+
+.prompt-host {
+  color: #89a7d6;
+}
+
+.prompt-path {
+  color: #c4cfde;
+}
+
+.prompt-dollar {
+  color: #ef9a4d;
+  text-shadow: 0 0 10px rgba(239, 154, 77, 0.22);
+}
+
+.prompt-command {
+  color: rgba(243, 244, 246, 0.92);
+}
+
+.status-online {
+  color: #8dd1a5;
+  text-shadow: 0 0 10px rgba(141, 209, 165, 0.2);
+}
 
 .cursor {
   display: inline-block;

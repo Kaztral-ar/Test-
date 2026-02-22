@@ -20,6 +20,33 @@ function typeLoaderLine(element, text, speed = 40) {
   });
 }
 
+function decorateLoaderLine(line) {
+  const style = line.dataset.loaderStyle;
+
+  if (style === 'prompt-top') {
+    line.innerHTML = `┌──(<span class="prompt-user">kaztral</span>㉿<span class="prompt-host">portfolio</span>)-[<span class="prompt-path">~</span>]`;
+    return;
+  }
+
+  if (style === 'prompt-boot') {
+    line.innerHTML = `└─<span class="prompt-dollar">$</span> <span class="prompt-command">boot --init</span>`;
+    return;
+  }
+
+  const text = line.dataset.loaderLine || '';
+
+  if (text.startsWith('$ ')) {
+    const commandText = text.slice(2);
+
+    if (commandText.includes('Status: ONLINE')) {
+      line.innerHTML = `<span class="prompt-dollar">$</span> <span class="prompt-command">Status: <span class="status-online">ONLINE</span></span>`;
+      return;
+    }
+
+    line.innerHTML = `<span class="prompt-dollar">$</span> <span class="prompt-command">${commandText}</span>`;
+  }
+}
+
 async function runLoaderSequence() {
   if (!loaderOverlay || !pageContent) {
     document.body.classList.add('loaded');
@@ -32,6 +59,7 @@ async function runLoaderSequence() {
   for (const line of loaderLines) {
     const text = line.dataset.loaderLine || '';
     await typeLoaderLine(line, text, 34);
+    decorateLoaderLine(line);
     await new Promise((resolve) => window.setTimeout(resolve, 180));
   }
 
