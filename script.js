@@ -356,10 +356,33 @@ if (capabilitiesDeck) {
 
 // Projects clean two-sided flip cards
 const cards = document.querySelectorAll('.card');
+const projectsGrid = document.getElementById('projectsGrid');
+
+let activeCardTilt = null;
+
+function applyCardTilt(event, card) {
+  const bounds = card.getBoundingClientRect();
+  const x = event.clientX - bounds.left;
+  const y = event.clientY - bounds.top;
+  const rotateY = ((x / bounds.width) - 0.5) * 12;
+  const rotateX = (0.5 - (y / bounds.height)) * 10;
+
+  if (card.classList.contains('active')) {
+    card.style.transform = `rotateY(180deg) rotateX(${rotateX}deg) rotateZ(${rotateY * 0.35}deg) translateZ(12px)`;
+    return;
+  }
+
+  card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px)`;
+}
+
+function resetCardTilt(card) {
+  card.style.transform = '';
+}
 
 cards.forEach((card) => {
   const toggleFunction = () => {
     card.classList.toggle('active');
+    resetCardTilt(card);
   };
 
   card.addEventListener('click', (event) => {
@@ -373,7 +396,49 @@ cards.forEach((card) => {
       toggleFunction();
     }
   });
+
+  card.addEventListener('pointermove', (event) => {
+    activeCardTilt = card;
+    applyCardTilt(event, card);
+  });
+
+  card.addEventListener('pointerleave', () => {
+    if (activeCardTilt === card) {
+      activeCardTilt = null;
+    }
+    resetCardTilt(card);
+  });
 });
+
+if (projectsGrid) {
+  let autoDirection = 1;
+
+  const moveProjectsHorizontally = () => {
+    const maxScroll = projectsGrid.scrollWidth - projectsGrid.clientWidth;
+    if (maxScroll <= 0) return;
+
+    projectsGrid.scrollLeft += autoDirection * 0.45;
+
+    if (projectsGrid.scrollLeft >= maxScroll - 1) autoDirection = -1;
+    if (projectsGrid.scrollLeft <= 1) autoDirection = 1;
+  };
+
+  let autoScrollFrame = window.setInterval(moveProjectsHorizontally, 16);
+
+  const pauseAutoScroll = () => {
+    window.clearInterval(autoScrollFrame);
+  };
+
+  const resumeAutoScroll = () => {
+    pauseAutoScroll();
+    autoScrollFrame = window.setInterval(moveProjectsHorizontally, 16);
+  };
+
+  projectsGrid.addEventListener('mouseenter', pauseAutoScroll);
+  projectsGrid.addEventListener('mouseleave', resumeAutoScroll);
+  projectsGrid.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+  projectsGrid.addEventListener('touchend', resumeAutoScroll, { passive: true });
+}
 
 // Footer year
 const year = document.getElementById('year');
