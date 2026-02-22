@@ -17,39 +17,6 @@ if (navToggle && navMenu) {
   });
 }
 
-// Typing effect
-const typingText = document.getElementById('typingText');
-const roles = ['Developer | Web Designer | Bash Tool Builder'];
-let charIndex = 0;
-let isDeleting = false;
-
-function runTyping() {
-  if (!typingText) return;
-
-  const role = roles[0];
-
-  if (!isDeleting) {
-    charIndex += 1;
-    typingText.textContent = role.slice(0, charIndex);
-    if (charIndex === role.length) {
-      isDeleting = true;
-      setTimeout(runTyping, 1300);
-      return;
-    }
-  } else {
-    charIndex -= 1;
-    typingText.textContent = role.slice(0, charIndex);
-
-    if (charIndex === 0) {
-      isDeleting = false;
-    }
-  }
-
-  setTimeout(runTyping, isDeleting ? 28 : 52);
-}
-
-runTyping();
-
 // About terminal typing effect
 const aboutTerminal = document.getElementById('aboutTerminal');
 
